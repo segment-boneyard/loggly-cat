@@ -26,10 +26,18 @@
 $ go get github.com/segmentio/loggly-cat
 ```
 
-## Example
+## Examples
+
+  From stdio:
 
 ```
-$ myapp | loggly-cat -t my-token-here -T myapp
+$ myapp | loggly-cat -t my-token -T myapp
+```
+
+  From tail:
+
+```
+tail -F /var/log/upstart/buffer.log | loggly-cat -t my-token -T redshift -T red-buffer
 ```
 
 # License

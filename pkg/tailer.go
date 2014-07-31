@@ -8,16 +8,22 @@ import "os"
 
 // Tailer
 type Tailer struct {
-	r    io.Reader
-	w    io.Writer
-	l    *loggly.Client
-	exit chan bool
+	Verbose bool
+	r       io.Reader
+	w       io.Writer
+	l       *loggly.Client
+	exit    chan bool
 }
 
 // NewTailer creates a new tailer reading from `r`
 // and writing to the loggly client `l`.
 func NewTailer(r io.Reader, l *loggly.Client) *Tailer {
-	return &Tailer{r, os.Stdout, l, make(chan bool)}
+	return &Tailer{
+		exit: make(chan bool),
+		w:    os.Stdout,
+		r:    r,
+		l:    l,
+	}
 }
 
 // Start tailing.
@@ -48,11 +54,13 @@ func (t *Tailer) Tail() {
 		default:
 			line, err := buf.ReadBytes('\n')
 
-			_, err = t.w.Write(line)
+			if t.Verbose {
+				_, err = t.w.Write(line)
 
-			if err != nil {
-				log.Error("failed to write: %s", err)
-				break
+				if err != nil {
+					log.Error("failed to write: %s", err)
+					break
+				}
 			}
 
 			if err == io.EOF {

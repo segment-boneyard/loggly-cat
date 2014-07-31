@@ -15,11 +15,12 @@ const Version = "1.0.0"
 const Usage = `
 
   Usage:
-    loggly-cat --token t [--tag t]...
+    loggly-cat --token t [--quiet] [--tag t]...
     loggly-cat -h | --help
     loggly-cat --version
 
   Options:
+    -q, --quiet       suppress output
     -t, --token t     loggly api token
     -T, --tag t       loggly tag(s)
     -h, --help        output help information
@@ -39,6 +40,7 @@ func main() {
 	check(err)
 
 	// options
+	quiet := args["--quiet"].(bool)
 	tags := args["--tag"].([]string)
 	token := args["--token"].(string)
 
@@ -51,6 +53,7 @@ func main() {
 
 	l := loggly.New(token, tags...)
 	t := NewTailer(os.Stdin, l)
+	t.Verbose = !quiet
 
 	l.BufferSize = 2000
 	l.FlushInterval = 10 * time.Second

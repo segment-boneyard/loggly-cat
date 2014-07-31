@@ -28,7 +28,7 @@ func (t *Tailer) Start() {
 // Stop tailing and flush loggly.
 func (t *Tailer) Stop() {
 	log.Info("stopping")
-	t.exit <- true
+	close(t.exit)
 
 	log.Info("flushing")
 	t.l.Flush()

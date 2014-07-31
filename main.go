@@ -5,6 +5,7 @@ import . "github.com/segmentio/loggly-cat/pkg"
 import "github.com/segmentio/go-loggly"
 import "github.com/segmentio/go-log"
 import "github.com/docopt/docopt-go"
+import "time"
 import "os"
 
 // Version
@@ -50,6 +51,9 @@ func main() {
 
 	l := loggly.New(token, tags...)
 	t := NewTailer(os.Stdin, l)
+
+	l.BufferSize = 2000
+	l.FlushInterval = 10 * time.Second
 
 	// start
 	log.Info("starting loggly-cat %s", Version)

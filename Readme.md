@@ -37,13 +37,13 @@ $ myapp | loggly-cat -t my-token -T myapp
   From tailing:
 
 ```
-tail -F /var/log/upstart/buffer.log | loggly-cat -t my-token -T redshift -T red-buffer
+tail -n0 -F /var/log/upstart/buffer.log | loggly-cat -t my-token -T redshift -T red-buffer
 ```
 
   From tailing many:
 
 ```
-tail -F /var/log/upstart/{buffer,transform,load}.log | loggly-cat -t my-token -T redshift
+tail -n0 -F /var/log/upstart/{buffer,transform,load}.log | loggly-cat -t my-token -T redshift
 ```
 
 # License
